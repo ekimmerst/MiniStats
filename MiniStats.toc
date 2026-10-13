@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: MiniStats
+## Notes: Compact draggable money and free bag slots below the minimap.
+## Notes-deDE: Geld und freie Taschenplätze unter der Minimap.
+## IconTexture: Interface\MoneyFrame\UI-GoldIcon
+## Author: MiniStats
+## Version: 1.0.0
+## OptionalDeps: MiniExpBar
+## SavedVariablesPerCharacter: MiniStatsDB
+
+MiniStats.lua
