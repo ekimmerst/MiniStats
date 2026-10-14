@@ -65,15 +65,15 @@ end
 local function ShowTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
     if self.index == 1 then
-        GameTooltip:AddLine("Geld", 1, 0.82, 0)
+        GameTooltip:AddLine("Money", 1, 0.82, 0)
         local money = GetMoney() or 0
-        GameTooltip:AddLine(string.format("%d Gold, %d Silber, %d Kupfer", math.floor(money / 10000), math.floor(money / 100) % 100, money % 100), 1, 1, 1)
+        GameTooltip:AddLine(string.format("%d gold, %d silver, %d copper", math.floor(money / 10000), math.floor(money / 100) % 100, money % 100), 1, 1, 1)
     else
-        GameTooltip:AddLine("Taschenplätze", 1, 0.82, 0)
-        GameTooltip:AddLine(string.format("%d frei / %d insgesamt · %d belegt", freeSlots, totalSlots, totalSlots - freeSlots), 1, 1, 1)
-        GameTooltip:AddLine("Rucksack und angelegte Taschen (inkl. Spezialtaschen)", 0.7, 0.7, 0.7)
+        GameTooltip:AddLine("Bag slots", 1, 0.82, 0)
+        GameTooltip:AddLine(string.format("%d free / %d total · %d occupied", freeSlots, totalSlots, totalSlots - freeSlots), 1, 1, 1)
+        GameTooltip:AddLine("Backpack and equipped bags (including specialty bags)", 0.7, 0.7, 0.7)
     end
-    GameTooltip:AddLine("Linke Maustaste halten und ziehen zum Verschieben", 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("Hold the left mouse button and drag to move", 0.7, 0.7, 0.7)
     GameTooltip:Show()
 end
 local function CreateBar()
@@ -147,6 +147,6 @@ SlashCmdList.MINISTATS = function(message)
         RestorePosition()
         UpdateStats()
     else
-        print("MiniStats: /ministats reset - Position zurücksetzen. Mit gedrückter linker Maustaste verschieben.")
+        print("MiniStats: /ministats reset - Reset position. Hold the left mouse button and drag to move.")
     end
 end

@@ -1,7 +1,6 @@
 ## Interface: 16001
 ## Title: MiniStats
 ## Notes: Compact draggable money and free bag slots below the minimap.
-## Notes-deDE: Geld und freie Taschenplätze unter der Minimap.
 ## IconTexture: Interface\AddOns\MiniStats\MiniStatsIcon
 ## Author: MiniStats
 ## Version: 1.0.0

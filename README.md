@@ -1,33 +1,33 @@
 # MiniStats
 
-**Ein kompaktes World-of-Warcraft-Addon für WoW Forever Beta.**
+**A compact World of Warcraft addon for WoW Forever Beta.**
 
-MiniStats zeigt dein Gold, Silber und Kupfer sowie freie Taschenplätze in einer transparenten Leiste unter der Minimap. So behältst du Geld und Stauraum auch unterwegs im Blick.
+MiniStats displays your gold, silver, copper, and free bag slots in a transparent bar below the minimap. Keep track of your money and storage space wherever you go.
 
-## Funktionen
+## Features
 
-- Farbige Geldanzeige mit Münzsymbol.
-- Freie und gesamte Taschenplätze, inklusive Spezialtaschen; ohne Bank und Schlüsselbund.
-- Automatische Aktualisierung und Tooltips mit weiteren Details.
-- Frei verschiebbare Leiste mit gespeicherter Position pro Charakter.
-- Passt sich der Breite von MiniExpBar oder der Minimap an. MiniExpBar ist optional.
+- Color-coded money display with a coin icon.
+- Free and total bag slots, including specialty bags; excludes the bank and keyring.
+- Automatic updates and tooltips with additional details.
+- Freely draggable bar with its position saved per character.
+- Matches the width of MiniExpBar or the minimap. MiniExpBar is optional.
 
 ## Installation
 
-1. Lade das Repository herunter und benenne den entpackten Addon-Ordner in `MiniStats` um.
-2. Kopiere ihn nach `World of Warcraft/<Spielversion>/Interface/AddOns/`. Die Dateien `MiniStats.toc` und `MiniStats.lua` müssen direkt im Ordner `MiniStats` liegen.
-3. Starte das Spiel neu und aktiviere **MiniStats** in der Addon-Liste der Charakterauswahl.
+1. Download the repository and rename the extracted addon folder to `MiniStats`.
+2. Copy it to `World of Warcraft/<game-version>/Interface/AddOns/`. The files `MiniStats.toc` and `MiniStats.lua` must be directly inside the `MiniStats` folder.
+3. Restart the game and enable **MiniStats** in the addon list on the character selection screen.
 
-## Bedienung
+## Usage
 
-Die Leiste erscheint automatisch unter MiniExpBar, falls vorhanden, oder unter der Minimap. `4 (10)` bedeutet beispielsweise **4 freie von 10 Taschenplätzen**.
+The bar automatically appears below MiniExpBar, if available, or below the minimap. For example, `4 (10)` means **4 free slots out of 10 total bag slots**.
 
-Halte die **linke Maustaste** auf der Leiste gedrückt, um sie zu verschieben. Mit folgendem Befehl setzt du ihre Position zurück:
+Hold the **left mouse button** on the bar to drag it. Use the following command to reset its position:
 
 ```text
 /ministats reset
 ```
 
-## Kompatibilität
+## Compatibility
 
-Entwickelt für **WoW Forever Beta**, Interface-Version **16001**. Keine weiteren Addons erforderlich.
+Designed for **WoW Forever Beta**, interface version **16001**. No other addons are required.
