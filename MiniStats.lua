@@ -2,6 +2,7 @@ local ADDON_NAME = ...
 local bar, cells
 local initialized = false
 local freeSlots, totalSlots = 0, 0
+local ammoCount = 0
 local function RestorePosition()
     bar:ClearAllPoints()
     local p = MiniStatsDB.position
@@ -26,7 +27,7 @@ local function Layout()
     local width = source:GetWidth() * source:GetEffectiveScale() / bar:GetEffectiveScale()
     if width <= 0 then return end
     bar:SetWidth(width)
-    -- Keep both groups at the outer edges; shrink text only if space runs out.
+    -- Spread the stats across the bar; shrink text only if space runs out.
     local textWidths, totalTextWidth = {}, 0
     for i, cell in ipairs(cells) do
         cell.text:SetScale(1)
@@ -35,13 +36,14 @@ local function Layout()
     end
     local available = math.max(2, width - 18 * #cells - 8)
     local textScale = math.min(1, available / totalTextWidth)
+    local gap = math.max(0, (width - 18 * #cells - totalTextWidth * textScale) / (#cells - 1))
     for i, cell in ipairs(cells) do
         cell:SetWidth(18 + textWidths[i] * textScale)
         cell:ClearAllPoints()
         if i == 1 then
             cell:SetPoint("LEFT", bar, "LEFT", 0, 0)
         else
-            cell:SetPoint("RIGHT", bar, "RIGHT", 0, 0)
+            cell:SetPoint("LEFT", cells[i - 1], "RIGHT", gap, 0)
         end
         cell.text:SetScale(textScale)
     end
@@ -55,11 +57,22 @@ local function UpdateStats()
     local getSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
     local getFree = C_Container and C_Container.GetContainerNumFreeSlots or GetContainerNumFreeSlots
     for bag = 0, (NUM_BAG_SLOTS or 4) do
-        totalSlots = totalSlots + (getSlots(bag) or 0)
-        freeSlots = freeSlots + (getFree(bag) or 0)
+        local free, family = getFree(bag)
+        if bag == 0 or family == 0 then
+            totalSlots = totalSlots + (getSlots(bag) or 0)
+            freeSlots = freeSlots + (free or 0)
+        end
     end
-    cells[2].text:SetText(string.format("%d (%d)", freeSlots, totalSlots))
+    cells[2].text:SetText(tostring(freeSlots))
     cells[2].text:SetTextColor(1, freeSlots == 0 and 0.25 or 1, freeSlots == 0 and 0.2 or 1)
+    local ammoSlot = GetInventorySlotInfo("AmmoSlot") or 0
+    local ammoTexture = GetInventoryItemTexture("player", ammoSlot)
+    -- The ammo slot reports the selected ammunition's total across carried bags.
+    -- An empty slot can report 1, so check its texture before using the count.
+    ammoCount = ammoTexture and (GetInventoryItemCount("player", ammoSlot) or 0) or 0
+    cells[3].icon:SetTexture(ammoTexture or "Interface\\Icons\\INV_Ammo_Arrow_02")
+    cells[3].text:SetText(tostring(ammoCount))
+    cells[3].text:SetTextColor(1, ammoCount == 0 and 0.25 or 1, ammoCount == 0 and 0.2 or 1)
     Layout()
 end
 local function ShowTooltip(self)
@@ -68,10 +81,14 @@ local function ShowTooltip(self)
         GameTooltip:AddLine("Money", 1, 0.82, 0)
         local money = GetMoney() or 0
         GameTooltip:AddLine(string.format("%d gold, %d silver, %d copper", math.floor(money / 10000), math.floor(money / 100) % 100, money % 100), 1, 1, 1)
-    else
+    elseif self.index == 2 then
         GameTooltip:AddLine("Bag slots", 1, 0.82, 0)
         GameTooltip:AddLine(string.format("%d free / %d total · %d occupied", freeSlots, totalSlots, totalSlots - freeSlots), 1, 1, 1)
-        GameTooltip:AddLine("Backpack and equipped bags (including specialty bags)", 0.7, 0.7, 0.7)
+        GameTooltip:AddLine("Backpack and regular bags only (excludes specialty bags)", 0.7, 0.7, 0.7)
+    else
+        GameTooltip:AddLine("Ammo", 1, 0.82, 0)
+        GameTooltip:AddLine(string.format("%d remaining", ammoCount), 1, 1, 1)
+        GameTooltip:AddLine("Currently selected ammunition in carried bags", 0.7, 0.7, 0.7)
     end
     GameTooltip:AddLine("Hold the left mouse button and drag to move", 0.7, 0.7, 0.7)
     GameTooltip:Show()
@@ -90,8 +107,8 @@ local function CreateBar()
     bar:SetScript("OnDragStart", startDrag)
     bar:SetScript("OnDragStop", stopDrag)
     cells = {}
-    local icons = { "Interface\\MoneyFrame\\UI-GoldIcon", "Interface\\Icons\\INV_Misc_Bag_08" }
-    for i = 1, 2 do
+    local icons = { "Interface\\MoneyFrame\\UI-GoldIcon", "Interface\\Icons\\INV_Misc_Bag_08", "Interface\\Icons\\INV_Ammo_Arrow_02" }
+    for i = 1, #icons do
         local cell = CreateFrame("Frame", nil, bar)
         cell.index = i
         cell:SetHeight(20)
@@ -105,6 +122,7 @@ local function CreateBar()
         icon:SetSize(14, 14)
         icon:SetPoint("LEFT", 1, 0)
         icon:SetTexture(icons[i])
+        cell.icon = icon
         if i > 1 then icon:SetTexCoord(0.08, 0.92, 0.08, 0.92) end
         cell.text = cell:CreateFontString(nil, "OVERLAY")
         cell.text:SetPoint("LEFT", icon, "RIGHT", 3, 0)
@@ -119,7 +137,7 @@ local function CreateBar()
     UpdateStats()
 end
 local events = CreateFrame("Frame")
-for _, event in ipairs({ "ADDON_LOADED", "PLAYER_ENTERING_WORLD", "PLAYER_MONEY", "BAG_UPDATE", "UI_SCALE_CHANGED", "DISPLAY_SIZE_CHANGED" }) do
+for _, event in ipairs({ "ADDON_LOADED", "PLAYER_ENTERING_WORLD", "PLAYER_MONEY", "BAG_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "UNIT_INVENTORY_CHANGED", "UI_SCALE_CHANGED", "DISPLAY_SIZE_CHANGED" }) do
     events:RegisterEvent(event)
 end
 events:SetScript("OnEvent", function(_, event, name)

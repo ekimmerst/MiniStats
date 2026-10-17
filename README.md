@@ -2,12 +2,13 @@
 
 **A compact World of Warcraft addon for WoW Forever Beta.**
 
-MiniStats displays your gold, silver, copper, and free bag slots in a transparent bar below the minimap. Keep track of your money and storage space wherever you go.
+MiniStats displays your gold, silver, copper, free bag slots, and remaining ammunition in a transparent bar below the minimap.
 
 ## Features
 
 - Color-coded money display with a coin icon.
-- Free and total bag slots, including specialty bags; excludes the bank and keyring.
+- Free slots in the backpack and regular bags; excludes specialty bags, the bank, and keyring.
+- Remaining selected ammunition with its item icon, including ammunition carried in quivers and ammo pouches.
 - Automatic updates and tooltips with additional details.
 - Freely draggable bar with its position saved per character.
 - Matches the width of MiniExpBar or the minimap. MiniExpBar is optional.
@@ -20,7 +21,7 @@ MiniStats displays your gold, silver, copper, and free bag slots in a transparen
 
 ## Usage
 
-The bar automatically appears below MiniExpBar, if available, or below the minimap. For example, `4 (10)` means **4 free slots out of 10 total bag slots**.
+The bar automatically appears below MiniExpBar, if available, or below the minimap. The bag number shows only free slots. Ammo shows the remaining count of your currently selected ammunition, or `0` if none is selected.
 
 Hold the **left mouse button** on the bar to drag it. Use the following command to reset its position:
 
